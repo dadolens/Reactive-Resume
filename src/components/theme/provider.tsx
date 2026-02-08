@@ -12,6 +12,12 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 type Props = PropsWithChildren<{ theme: Theme }>;
 
+type ThemeProviderBaseProps = PropsWithChildren<ThemeContextValue>;
+
+export function ThemeProviderBase({ children, theme, setTheme, toggleTheme }: ThemeProviderBaseProps) {
+	return <ThemeContext value={{ theme, setTheme, toggleTheme }}>{children}</ThemeContext>;
+}
+
 export function ThemeProvider({ children, theme }: Props) {
 	const router = useRouter();
 
@@ -37,7 +43,7 @@ export function ThemeProvider({ children, theme }: Props) {
 		setTheme(theme === "dark" ? "light" : "dark", options);
 	}
 
-	return <ThemeContext value={{ theme, setTheme, toggleTheme }}>{children}</ThemeContext>;
+	return <ThemeProviderBase theme={theme} setTheme={setTheme} toggleTheme={toggleTheme}>{children}</ThemeProviderBase>;
 }
 
 export function useTheme() {

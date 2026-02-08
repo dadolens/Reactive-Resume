@@ -1,5 +1,4 @@
 import { t } from "@lingui/core/macro";
-import { debounce } from "es-toolkit";
 import isDeepEqual from "fast-deep-equal";
 import type { WritableDraft } from "immer";
 import { current } from "immer";
@@ -9,10 +8,16 @@ import { temporal } from "zundo";
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand/react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
-import { orpc, type RouterOutput } from "@/integrations/orpc/client";
 import type { ResumeData } from "@/schema/resume/data";
 
-type Resume = Pick<RouterOutput["resume"]["getByIdForPrinter"], "id" | "name" | "slug" | "tags" | "data" | "isLocked">;
+type Resume = {
+	id: string;
+	name: string;
+	slug: string;
+	tags: string[];
+	data: ResumeData;
+	isLocked: boolean;
+};
 
 type ResumeStoreState = {
 	resume: Resume;
@@ -27,15 +32,6 @@ type ResumeStoreActions = {
 };
 
 type ResumeStore = ResumeStoreState & ResumeStoreActions;
-
-const controller = new AbortController();
-const signal = controller.signal;
-
-const _syncResume = (resume: Resume) => {
-	orpc.resume.update.call({ id: resume.id, data: resume.data }, { signal });
-};
-
-const syncResume = debounce(_syncResume, 500, { signal });
 
 let errorToastId: string | number | undefined;
 
@@ -73,11 +69,7 @@ export const useResumeStore = create<ResumeStore>()(
 
 					fn(state.resume.data);
 					const updatedResume = current(state.resume);
-					if (state.onChange) {
-						state.onChange(updatedResume.data);
-					} else {
-						syncResume(updatedResume);
-					}
+					state.onChange?.(updatedResume.data);
 				});
 			},
 		})),

@@ -23,6 +23,7 @@ import {
 } from "@/components/primitives/alert-dialog";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/utils/style";
+import { usePortalContainer } from "./portal-container";
 
 type AlertDialogProps = AlertDialogPrimitiveProps;
 
@@ -45,8 +46,9 @@ function AlertDialogOverlay({ className, ...props }: AlertDialogOverlayProps) {
 type AlertDialogContentProps = AlertDialogContentPrimitiveProps;
 
 function AlertDialogContent({ className, ...props }: AlertDialogContentProps) {
+	const container = usePortalContainer();
 	return (
-		<AlertDialogPortalPrimitive>
+		<AlertDialogPortalPrimitive container={container ?? undefined}>
 			<AlertDialogOverlay />
 			<AlertDialogContentPrimitive
 				className={cn(

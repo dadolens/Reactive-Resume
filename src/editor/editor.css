@@ -1,0 +1,10 @@
+@media print {
+	.react-transform-wrapper,
+	.react-transform-component {
+		transform: none !important;
+	}
+
+	.react-transform-wrapper {
+		overflow: visible !important;
+	}
+}

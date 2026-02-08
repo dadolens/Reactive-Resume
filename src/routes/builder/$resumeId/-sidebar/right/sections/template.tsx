@@ -1,6 +1,7 @@
 import { useLingui } from "@lingui/react";
 import { SwapIcon } from "@phosphor-icons/react";
 import { useResumeStore } from "@/components/resume/store/resume";
+import { useAssetUrl } from "@/components/resume/assets";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { templates } from "@/dialogs/resume/template/data";
@@ -19,6 +20,7 @@ function TemplateSectionForm() {
 	const { i18n } = useLingui();
 	const openDialog = useDialogStore((state) => state.openDialog);
 	const template = useResumeStore((state) => state.resume.data.metadata.template);
+	const assetUrl = useAssetUrl(templates[template].imageUrl);
 
 	const metadata = templates[template];
 
@@ -34,7 +36,7 @@ function TemplateSectionForm() {
 				className="group/preview relative h-auto w-40 shrink-0 cursor-pointer p-0"
 			>
 				<div className="relative z-10 aspect-page size-full overflow-hidden rounded-md opacity-100 transition-opacity group-hover/preview:opacity-50">
-					<img src={metadata.imageUrl} alt={metadata.name} className="size-full object-cover" />
+					<img src={assetUrl} alt={metadata.name} className="size-full object-cover" />
 				</div>
 
 				<div className="absolute inset-0 flex items-center justify-center">

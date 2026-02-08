@@ -31,6 +31,7 @@ import {
 	type DropdownMenuTriggerProps as DropdownMenuTriggerPrimitiveProps,
 } from "@/components/primitives/dropdown-menu";
 import { cn } from "@/utils/style";
+import { usePortalContainer } from "./portal-container";
 
 type DropdownMenuProps = DropdownMenuPrimitiveProps;
 
@@ -46,10 +47,18 @@ function DropdownMenuTrigger(props: DropdownMenuTriggerProps) {
 
 type DropdownMenuContentProps = DropdownMenuContentPrimitiveProps;
 
-function DropdownMenuContent({ sideOffset = 4, className, children, ...props }: DropdownMenuContentProps) {
+function DropdownMenuContent({
+	sideOffset = 4,
+	className,
+	children,
+	container: containerProp,
+	...props
+}: DropdownMenuContentProps) {
+	const container = usePortalContainer();
 	return (
 		<DropdownMenuContentPrimitive
 			sideOffset={sideOffset}
+			container={containerProp ?? container ?? undefined}
 			className={cn(
 				"z-50 max-h-(--radix-dropdown-menu-content-available-height) min-w-32 origin-(--radix-dropdown-menu-content-transform-origin) overflow-y-auto overflow-x-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none",
 				className,
@@ -203,9 +212,11 @@ function DropdownMenuSubTrigger({ disabled, className, inset, children, ...props
 
 type DropdownMenuSubContentProps = DropdownMenuSubContentPrimitiveProps;
 
-function DropdownMenuSubContent({ className, ...props }: DropdownMenuSubContentProps) {
+function DropdownMenuSubContent({ className, container: containerProp, ...props }: DropdownMenuSubContentProps) {
+	const container = usePortalContainer();
 	return (
 		<DropdownMenuSubContentPrimitive
+			container={containerProp ?? container ?? undefined}
 			className={cn(
 				"z-50 min-w-32 origin-(--radix-dropdown-menu-content-transform-origin) overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg outline-none",
 				className,

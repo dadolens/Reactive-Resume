@@ -3,6 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { SlideshowIcon } from "@phosphor-icons/react";
 import { type RefObject, useRef } from "react";
 import { CometCard } from "@/components/animation/comet-card";
+import { useAssetUrl } from "@/components/resume/assets";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Badge } from "@/components/ui/badge";
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -72,6 +73,7 @@ type TemplateCardProps = {
 
 function TemplateCard({ id, metadata, isActive, collisionBoundary, onSelect }: TemplateCardProps) {
 	const { i18n } = useLingui();
+	const imageUrl = useAssetUrl(metadata.imageUrl);
 
 	return (
 		<HoverCard openDelay={0} closeDelay={0}>
@@ -85,7 +87,7 @@ function TemplateCard({ id, metadata, isActive, collisionBoundary, onSelect }: T
 							isActive && "ring-2 ring-ring ring-offset-4 ring-offset-background",
 						)}
 					>
-						<img src={metadata.imageUrl} alt={metadata.name} className="size-full object-cover" />
+						<img src={imageUrl} alt={metadata.name} className="size-full object-cover" />
 					</button>
 				</HoverCardTrigger>
 

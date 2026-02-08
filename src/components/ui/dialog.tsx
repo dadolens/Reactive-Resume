@@ -20,6 +20,7 @@ import {
 	type DialogTriggerProps as DialogTriggerPrimitiveProps,
 } from "@/components/primitives/dialog";
 import { cn } from "@/utils/style";
+import { usePortalContainer } from "./portal-container";
 
 type DialogProps = DialogPrimitiveProps;
 
@@ -48,8 +49,9 @@ function DialogOverlay({ className, ...props }: DialogOverlayProps) {
 type DialogContentProps = DialogContentPrimitiveProps;
 
 function DialogContent({ className, children, ...props }: DialogContentProps) {
+	const container = usePortalContainer();
 	return (
-		<DialogPortalPrimitive>
+		<DialogPortalPrimitive container={container ?? undefined}>
 			<DialogOverlay />
 			<DialogContentPrimitive
 				className={cn(
