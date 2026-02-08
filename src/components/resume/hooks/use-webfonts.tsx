@@ -9,9 +9,15 @@ export function useWebfonts(typography: z.infer<typeof typographySchema>) {
 
 	useEffect(() => {
 		if (!isMounted()) return;
+		if (typeof document === "undefined") return;
 
 		const body = document.body;
 		if (body) body.setAttribute("data-wf-loaded", "false");
+
+		if (typeof FontFace === "undefined" || !document.fonts) {
+			if (isMounted() && body) body.setAttribute("data-wf-loaded", "true");
+			return;
+		}
 
 		async function loadFont(family: string, weights: string[]) {
 			const font = webfontlist.find((font) => font.family === family);

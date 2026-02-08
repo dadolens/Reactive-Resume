@@ -5,8 +5,17 @@ import viteReact from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+	publicDir: false,
+	define: {
+		"process.env.NODE_ENV": JSON.stringify("production"),
+		"process.env": "{}",
+	},
 	resolve: {
 		alias: [
+			{
+				find: "@/integrations/orpc/client",
+				replacement: fileURLToPath(new URL("./src/editor/shims/orpc-client.ts", import.meta.url)),
+			},
 			{ find: "@", replacement: fileURLToPath(new URL("./src", import.meta.url)) },
 			{
 				find: "@/components/resume/store/resume",
@@ -43,8 +52,10 @@ export default defineConfig({
 		outDir: "dist/editor",
 		emptyOutDir: true,
 		cssCodeSplit: false,
+		assetsInlineLimit: 10_000_000,
 		rollupOptions: {
 			output: {
+				inlineDynamicImports: true,
 				assetFileNames: (assetInfo) => {
 					if (assetInfo.name === "style.css") return "assets/resume-editor.css";
 					return "assets/[name][extname]";
