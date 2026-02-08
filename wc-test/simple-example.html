@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Resume Editor Example</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      header {
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+
+      header p {
+        margin: 5px 0 0 0;
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      main {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+      }
+
+      resume-editor {
+        flex: 1;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Resume Editor - Web Component</h1>
+        <p>Edit your resume directly in the browser using the resume-editor web component</p>
+      </header>
+      <main>
+        <resume-editor id="editor" locale="en-US" theme="light" show-page-numbers="true"></resume-editor>
+      </main>
+    </div>
+
+    <script type="module">
+      import "./resume-editor.js";
+
+      // Simple example resume data
+      const resumeData = {
+        id: "simple-resume",
+        version: "1.0",
+        sections: {
+          summary: { id: "summary", name: "Summary", visibility: "visible", items: [] },
+          profiles: { id: "profiles", name: "Profiles", visibility: "visible", items: [] },
+          experience: { id: "experience", name: "Experience", visibility: "visible", items: [] },
+          education: { id: "education", name: "Education", visibility: "visible", items: [] },
+          skills: { id: "skills", name: "Skills", visibility: "visible", items: [] },
+          projects: { id: "projects", name: "Projects", visibility: "visible", items: [] },
+          certifications: { id: "certifications", name: "Certifications", visibility: "visible", items: [] },
+          awards: { id: "awards", name: "Awards", visibility: "visible", items: [] },
+          languages: { id: "languages", name: "Languages", visibility: "visible", items: [] },
+          interests: { id: "interests", name: "Interests", visibility: "visible", items: [] },
+          references: { id: "references", name: "References", visibility: "visible", items: [] },
+          custom: { id: "custom", name: "Custom", visibility: "visible", items: [] },
+        },
+        heading: {
+          id: "heading",
+          name: "Jane Smith",
+          email: "jane@example.com",
+          phone: "+1 (555) 987-6543",
+          location: "New York, NY",
+          url: "https://janesmith.com",
+          summary: "Creative designer and developer with 5+ years of experience.",
+        },
+        metadata: {
+          template: "modern",
+          language: "en-US",
+          date: new Date().toISOString(),
+          color: "#667eea",
+        },
+      };
+
+      const editor = document.getElementById("editor");
+      editor.value = resumeData;
+
+      // Listen for changes
+      editor.addEventListener("resume-change", (event) => {
+        console.log("Resume updated:", event.detail);
+      });
+    </script>
+  </body>
+</html>

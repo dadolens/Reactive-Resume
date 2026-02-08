@@ -1,0 +1,13 @@
+{
+  "name": "resume-editor-wc-test",
+  "version": "1.0.0",
+  "description": "Example usage of the resume-editor web component",
+  "private": true,
+  "scripts": {
+    "serve": "npx http-server -p 8000 -c-1",
+    "dev": "npx vite --host"
+  },
+  "keywords": ["resume", "web-component", "editor"],
+  "author": "",
+  "license": "MIT"
+}
