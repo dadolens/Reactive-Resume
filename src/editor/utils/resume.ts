@@ -53,6 +53,7 @@ export function buildEditorResume(data?: ResumeData): EditorResume {
 	if (!templateSchema.safeParse(normalized.metadata.template).success) {
 		normalized.metadata.template = defaultResumeData.metadata.template;
 	}
+
 	const name = normalized.basics?.name?.trim() || "Untitled Resume";
 
 	return {

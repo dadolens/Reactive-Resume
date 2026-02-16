@@ -11,12 +11,16 @@ import type { Theme } from "@/utils/theme";
 import { isRTL, type Locale } from "@/utils/locale";
 
 const DEFAULT_ASSETS_BASE_URL = new URL(".", import.meta.url).toString();
-const INLINE_CSS = [fontCss, iconCss, globalsCss, editorCss].join("\n");
+const scopeCssForShadow = (css: string) =>
+	css
+		.replace(/(^|[\s,]):root(?=[\s,{:])/g, "$1:host")
+		.replace(/(^|[\s,])body(?=[\s,{:])/g, "$1:host");
+
+const INLINE_CSS = scopeCssForShadow([fontCss, iconCss, globalsCss, editorCss].join("\n"));
 
 class ResumeEditorElement extends HTMLElement {
 	private root: Root | null = null;
 	private container: HTMLDivElement | null = null;
-	private styleLink: HTMLLinkElement | null = null;
 	private inlineStyle: HTMLStyleElement | null = null;
 	private baseStyle: HTMLStyleElement | null = null;
 	private currentValue: ResumeData = defaultResumeData;
@@ -24,11 +28,10 @@ class ResumeEditorElement extends HTMLElement {
 	private theme: Theme = "light";
 	private assetsBaseUrl: string = DEFAULT_ASSETS_BASE_URL;
 	private showPageNumbers = true;
-	private cssHref: string | null = null;
 	private internalUpdate = false;
 
 	static get observedAttributes() {
-		return ["value", "locale", "theme", "assets-base-url", "show-page-numbers", "css-href"];
+		return ["value", "locale", "theme", "assets-base-url", "show-page-numbers"];
 	}
 
 	connectedCallback() {
@@ -43,7 +46,7 @@ class ResumeEditorElement extends HTMLElement {
 		}
 
 		this.ensureBaseStyle();
-		this.ensureStyles();
+		this.ensureInlineStyle();
 
 		if (!this.root && this.container) {
 			this.root = createRoot(this.container);
@@ -58,12 +61,6 @@ class ResumeEditorElement extends HTMLElement {
 	}
 
 	attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null) {
-		if (name === "css-href") {
-			this.cssHref = newValue && newValue.trim().length > 0 ? newValue : null;
-			this.ensureStyles();
-			return;
-		}
-
 		if (newValue === null) return;
 
 		switch (name) {
@@ -111,29 +108,6 @@ class ResumeEditorElement extends HTMLElement {
 		this.render();
 	}
 
-	private ensureStyles() {
-		if (!this.shadowRoot) return;
-		if (this.cssHref) {
-			this.removeInlineStyle();
-			this.ensureStyleLink();
-			return;
-		}
-
-		this.removeStyleLink();
-		this.ensureInlineStyle();
-	}
-
-	private ensureStyleLink() {
-		if (!this.shadowRoot) return;
-		if (!this.styleLink) {
-			this.styleLink = document.createElement("link");
-			this.styleLink.setAttribute("rel", "stylesheet");
-			this.styleLink.setAttribute("part", "styles");
-			this.shadowRoot.prepend(this.styleLink);
-		}
-		this.styleLink.href = this.cssHref ?? "";
-	}
-
 	private ensureInlineStyle() {
 		if (!this.shadowRoot) return;
 		if (!this.inlineStyle) {
@@ -142,16 +116,6 @@ class ResumeEditorElement extends HTMLElement {
 			this.shadowRoot.prepend(this.inlineStyle);
 		}
 		this.inlineStyle.textContent = INLINE_CSS;
-	}
-
-	private removeStyleLink() {
-		this.styleLink?.remove();
-		this.styleLink = null;
-	}
-
-	private removeInlineStyle() {
-		this.inlineStyle?.remove();
-		this.inlineStyle = null;
 	}
 
 	private ensureBaseStyle() {

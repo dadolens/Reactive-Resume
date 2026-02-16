@@ -56,7 +56,6 @@ npm run serve
 - **locale** - Language locale (e.g., "en-US", "es-ES", "fr-FR", etc.)
 - **theme** - "light" or "dark"
 - **show-page-numbers** - "true" or "false" (default: "true")
-- **css-href** - Optional URL to an external CSS file if you want to override the inlined styles
 - **assets-base-url** - Base URL for assets like template previews (auto-detected if not provided)
 
 ### JavaScript API
@@ -106,7 +105,7 @@ This generates:
 - `dist/editor/resume-editor.js` - The web component bundle
 - `dist/editor/templates/**` - Template previews (copied from `public/templates`)
 
-Styles are inlined into `resume-editor.js` by default.
+Styles are inlined into `resume-editor.js` and scoped to the Shadow DOM. No external CSS is required.
 
 ## Resume Data Structure
 

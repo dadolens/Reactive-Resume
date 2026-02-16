@@ -190,156 +190,6 @@
       // Import the web component
       import "./resume-editor.js";
 
-      // Default resume data
-      const defaultResumeData = {
-        id: "example-resume",
-        version: "1.0",
-        sections: {
-          summary: {
-            id: "summary",
-            name: "Summary",
-            visibility: "visible",
-            items: [],
-          },
-          profiles: {
-            id: "profiles",
-            name: "Profiles",
-            visibility: "visible",
-            items: [],
-          },
-          experience: {
-            id: "experience",
-            name: "Experience",
-            visibility: "visible",
-            items: [
-              {
-                id: "exp-1",
-                name: "Senior Developer",
-                subtitle: "Tech Company Inc.",
-                description: "Led development of key features and mentored junior developers.",
-                keywords: [],
-                location: "San Francisco, CA",
-                url: "",
-                date: "Jan 2020 - Present",
-                dateStart: "2020-01-01",
-                dateEnd: "",
-                isWorkExperience: true,
-                isCurrent: true,
-              },
-            ],
-          },
-          education: {
-            id: "education",
-            name: "Education",
-            visibility: "visible",
-            items: [
-              {
-                id: "edu-1",
-                name: "Bachelor of Science in Computer Science",
-                subtitle: "University of Technology",
-                description: "Graduated with honors",
-                keywords: [],
-                location: "Boston, MA",
-                url: "",
-                date: "2016 - 2020",
-                dateStart: "2016-01-01",
-                dateEnd: "2020-05-01",
-                isWorkExperience: false,
-                isCurrent: false,
-              },
-            ],
-          },
-          skills: {
-            id: "skills",
-            name: "Skills",
-            visibility: "visible",
-            items: [
-              {
-                id: "skill-1",
-                name: "JavaScript / TypeScript",
-                description: "Expert level",
-                keywords: [],
-                level: 5,
-                levelNum: 5,
-              },
-              {
-                id: "skill-2",
-                name: "React",
-                description: "Advanced",
-                keywords: [],
-                level: 4,
-                levelNum: 4,
-              },
-              {
-                id: "skill-3",
-                name: "Node.js",
-                description: "Advanced",
-                keywords: [],
-                level: 4,
-                levelNum: 4,
-              },
-            ],
-          },
-          projects: {
-            id: "projects",
-            name: "Projects",
-            visibility: "visible",
-            items: [],
-          },
-          certifications: {
-            id: "certifications",
-            name: "Certifications",
-            visibility: "visible",
-            items: [],
-          },
-          awards: {
-            id: "awards",
-            name: "Awards",
-            visibility: "visible",
-            items: [],
-          },
-          languages: {
-            id: "languages",
-            name: "Languages",
-            visibility: "visible",
-            items: [],
-          },
-          interests: {
-            id: "interests",
-            name: "Interests",
-            visibility: "visible",
-            items: [],
-          },
-          references: {
-            id: "references",
-            name: "References",
-            visibility: "visible",
-            items: [],
-          },
-          custom: {
-            id: "custom",
-            name: "Custom",
-            visibility: "visible",
-            items: [],
-          },
-        },
-        heading: {
-          id: "heading",
-          name: "John Doe",
-          email: "john@example.com",
-          phone: "+1 (555) 123-4567",
-          location: "San Francisco, CA",
-          url: "https://johndoe.com",
-          summary: "Full-stack developer passionate about building scalable web applications.",
-        },
-        metadata: {
-          template: "modern",
-          language: "en-US",
-          date: new Date().toISOString(),
-          color: "#FF6B6B",
-        },
-      };
-
       const editor = document.getElementById("editor");
       const localeSelect = document.getElementById("locale-select");
       const themeSelect = document.getElementById("theme-select");
@@ -349,6 +199,77 @@
       const clearPanelBtn = document.getElementById("clear-panel-btn");
       const resumeDataDiv = document.getElementById("resume-data");
       const validationMessage = document.getElementById("validation-message");
+
+      // Default resume data (clone from the component's current schema)
+      const defaultResumeData = JSON.parse(JSON.stringify(editor.value));
+
+      // Add a bit of demo data
+      defaultResumeData.basics.name = "John Doe";
+      defaultResumeData.basics.headline = "Full-stack developer";
+      defaultResumeData.basics.email = "john@example.com";
+      defaultResumeData.basics.phone = "+1 (555) 123-4567";
+      defaultResumeData.basics.location = "San Francisco, CA";
+      defaultResumeData.basics.website = { url: "https://johndoe.com", label: "johndoe.com" };
+      defaultResumeData.summary.title = "Summary";
+      defaultResumeData.summary.content = "<p>Full-stack developer passionate about building scalable web applications.</p>";
+
+      defaultResumeData.sections.experience.items = [
+        {
+          id: "exp-1",
+          hidden: false,
+          company: "Tech Company Inc.",
+          position: "Senior Developer",
+          location: "San Francisco, CA",
+          period: "Jan 2020 - Present",
+          website: { url: "", label: "" },
+          description: "<p>Led development of key features and mentored junior developers.</p>",
+        },
+      ];
+
+      defaultResumeData.sections.education.items = [
+        {
+          id: "edu-1",
+          hidden: false,
+          school: "University of Technology",
+          degree: "BSc Computer Science",
+          area: "Computer Science",
+          grade: "Honors",
+          location: "Boston, MA",
+          period: "2016 - 2020",
+          website: { url: "", label: "" },
+          description: "<p>Graduated with honors.</p>",
+        },
+      ];
+
+      defaultResumeData.sections.skills.items = [
+        {
+          id: "skill-1",
+          hidden: false,
+          icon: "",
+          name: "JavaScript / TypeScript",
+          proficiency: "Expert",
+          level: 5,
+          keywords: [],
+        },
+        {
+          id: "skill-2",
+          hidden: false,
+          icon: "",
+          name: "React",
+          proficiency: "Advanced",
+          level: 4,
+          keywords: [],
+        },
+        {
+          id: "skill-3",
+          hidden: false,
+          icon: "",
+          name: "Node.js",
+          proficiency: "Advanced",
+          level: 4,
+          keywords: [],
+        },
+      ];
 
       // Initialize editor with default data
       editor.value = defaultResumeData;
