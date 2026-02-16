@@ -61,8 +61,13 @@ type EditorLayoutProps = React.ComponentProps<"div"> & {
 	showPageNumbers: boolean;
 };
 
+import { useState } from "react";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+
 function EditorLayout({ showPageNumbers, ...props }: EditorLayoutProps) {
 	const isMobile = useIsMobile();
+	const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
+	const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
 
 	const leftSidebarRef = usePanelRef();
 	const rightSidebarRef = usePanelRef();
@@ -88,41 +93,67 @@ function EditorLayout({ showPageNumbers, ...props }: EditorLayoutProps) {
 	const rightSidebarSize = isMobile ? 0 : layout.right;
 	const artboardSize = isMobile ? 100 : layout.artboard;
 
+	const handleOpenLeftSidebar = () => setLeftDrawerOpen(true);
+	const handleOpenRightSidebar = () => setRightDrawerOpen(true);
+	const handleCloseLeftSidebar = () => setLeftDrawerOpen(false);
+	const handleCloseRightSidebar = () => setRightDrawerOpen(false);
+
 	return (
 		<div className="flex h-full w-full flex-col" {...props}>
-			<EditorHeader />
+			<EditorHeader
+				onOpenLeftSidebar={handleOpenLeftSidebar}
+				onOpenRightSidebar={handleOpenRightSidebar}
+			/>
 
-			<ResizableGroup orientation="horizontal" className="flex-1">
-				<ResizablePanel
-					collapsible
-					id="left"
-					panelRef={leftSidebarRef}
-					maxSize={maxSidebarSize}
-					minSize={collapsedSidebarSize * 2}
-					collapsedSize={collapsedSidebarSize}
-					defaultSize={leftSidebarSize}
-					className="z-20 h-full"
-				>
-					<EditorSidebarLeft />
-				</ResizablePanel>
-				<ResizableSeparator withHandle className="z-20 border-s print:hidden" />
-				<ResizablePanel id="artboard" defaultSize={artboardSize} className="h-full">
-					<EditorCanvas showPageNumbers={showPageNumbers} />
-				</ResizablePanel>
-				<ResizableSeparator withHandle className="z-20 border-e print:hidden" />
-				<ResizablePanel
-					collapsible
-					id="right"
-					panelRef={rightSidebarRef}
-					maxSize={maxSidebarSize}
-					minSize={collapsedSidebarSize * 2}
-					collapsedSize={collapsedSidebarSize}
-					defaultSize={rightSidebarSize}
-					className="z-20 h-full"
-				>
-					<EditorSidebarRight />
-				</ResizablePanel>
-			</ResizableGroup>
+			{isMobile ? (
+				<>
+					<Sheet open={leftDrawerOpen} onOpenChange={setLeftDrawerOpen}>
+						<SheetContent side="left" showCloseButton={true}>
+							<EditorSidebarLeft />
+						</SheetContent>
+					</Sheet>
+					<Sheet open={rightDrawerOpen} onOpenChange={setRightDrawerOpen}>
+						<SheetContent side="right" showCloseButton={true}>
+							<EditorSidebarRight />
+						</SheetContent>
+					</Sheet>
+					<div className="flex-1">
+						<EditorCanvas showPageNumbers={showPageNumbers} />
+					</div>
+				</>
+			) : (
+				<ResizableGroup orientation="horizontal" className="flex-1">
+					<ResizablePanel
+						collapsible
+						id="left"
+						panelRef={leftSidebarRef}
+						maxSize={maxSidebarSize}
+						minSize={collapsedSidebarSize * 2}
+						collapsedSize={collapsedSidebarSize}
+						defaultSize={leftSidebarSize}
+						className="z-20 h-full"
+					>
+						<EditorSidebarLeft />
+					</ResizablePanel>
+					<ResizableSeparator withHandle className="z-20 border-s print:hidden" />
+					<ResizablePanel id="artboard" defaultSize={artboardSize} className="h-full">
+						<EditorCanvas showPageNumbers={showPageNumbers} />
+					</ResizablePanel>
+					<ResizableSeparator withHandle className="z-20 border-e print:hidden" />
+					<ResizablePanel
+						collapsible
+						id="right"
+						panelRef={rightSidebarRef}
+						maxSize={maxSidebarSize}
+						minSize={collapsedSidebarSize * 2}
+						collapsedSize={collapsedSidebarSize}
+						defaultSize={rightSidebarSize}
+						className="z-20 h-full"
+					>
+						<EditorSidebarRight />
+					</ResizablePanel>
+				</ResizableGroup>
+			)}
 		</div>
 	);
 }
